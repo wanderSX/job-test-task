@@ -1,0 +1,78 @@
+version: '2'
+services:
+
+
+  web:
+    build:
+        context: ../web
+    volumes:
+      - ../web:/usr/src/app
+    environment:
+      - PARSE_APP_ID=TestTaskApplTcVXkSPuZpMsSKccGIN0TLlq0hcq
+      - PARSE_SERVER_URL=://localhost/parse
+      - PARSE_SERVER_URL_DOCKER=http://parse-server/parse
+    networks:
+      - nodeapp-network  
+
+
+  web-server:
+    build:
+        context: ../web-server
+    volumes:
+      - ../web-server:/usr/src/app
+    networks:
+      - nodeapp-network
+
+  nginx:
+    build: ./../nginx
+    ports:
+      - "80:80"
+    restart: "no"
+    volumes:
+      - ../web/web:/web
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - nodeapp-network
+
+  parse-server:
+    build: ../parse-server
+    environment:
+      - APP_ID=TestTaskApplTcVXkSPuZpMsSKccGIN0TLlq0hcq
+      - MASTER_KEY=TestTaskAppx7WydSk6nQOTWnlNWKfJRcgB3kpvG
+      - DATABASE_URI=mongodb://mongo/parsedev
+      - SERVER_URL=http://localhost/parse
+    networks:
+      - nodeapp-network 
+
+  parse-dashboard:
+    image: yongjhih/parse-dashboard:1.0.22
+    environment:
+      PARSE_DASHBOARD_ALLOW_INSECURE_HTTP: 1
+      PARSE_DASHBOARD_CONFIG: |
+               {
+                 "apps": [
+                   {
+                     "serverURL": "http://192.168.99.100/parse", 
+                     "appId": "TestTaskApplTcVXkSPuZpMsSKccGIN0TLlq0hcq",
+                     "masterKey": "TestTaskAppx7WydSk6nQOTWnlNWKfJRcgB3kpvG",
+                     "appName": "ParseServerApp"
+                   }
+                 ],
+                 "users": [
+                   {
+                     "user": "admin",
+                     "pass": "admin"
+                   }
+                 ]
+               }
+    networks:
+      - nodeapp-network          
+
+  mongo:
+    image: mongo
+    networks:
+      - nodeapp-network
+      
+networks:
+    nodeapp-network:
+      driver: bridge                   

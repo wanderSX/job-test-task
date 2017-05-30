@@ -1,0 +1,29 @@
+version: '2'
+services:
+  web:
+
+  web-server:
+
+  nginx:
+    depends_on:
+      - parse-server
+      - parse-dashboard
+      - web-server
+      - web
+    environment:
+      - NGINX_PORT=80
+    volumes_from:
+      - web:ro
+
+  mongo:
+    image: mongo
+    volumes:
+      - ./data/mongodb:/data/db
+
+  parse-server:
+    image: yongjhih/parse-server
+    depends_on:
+      - mongo
+
+  parse-dashboard:
+    image: yongjhih/parse-dashboard:1.0.22

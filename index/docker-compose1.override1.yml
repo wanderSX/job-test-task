@@ -1,0 +1,54 @@
+version: '2'
+services:
+
+  web:
+    build:
+        context: ../web
+    volumes:
+      - ../web:/usr/src/app
+    environment:
+      - PARSE_APP_ID=TestTaskApplTcVXkSPuZpMsSKccGIN0TLlq0hcq
+      - PARSE_SERVER_URL=://localhost/parse
+      - PARSE_SERVER_URL_DOCKER=http://parse-server/parse
+
+
+  web-server:
+    build:
+        context: ../web-server
+    volumes:
+      - ../web-server:/usr/src/app
+
+  nginx:
+    build: ./../nginx
+    ports:
+      - "80:80"
+    restart: "no"
+
+  parse-server:
+    environment:
+      - APP_ID=TestTaskApplTcVXkSPuZpMsSKccGIN0TLlq0hcq
+      - MASTER_KEY=TestTaskAppx7WydSk6nQOTWnlNWKfJRcgB3kpvG
+      - DATABASE_URI=mongodb://mongo/parsedev
+      - SERVER_URL=http://localhost/parse
+
+  parse-dashboard:
+    image: yongjhih/parse-dashboard:1.0.22
+    environment:
+      PARSE_DASHBOARD_ALLOW_INSECURE_HTTP: 1
+      PARSE_DASHBOARD_CONFIG: |
+               {
+                 "apps": [
+                   {
+                     "serverURL": "http://localhost/parse",
+                     "appId": "TestTaskApplTcVXkSPuZpMsSKccGIN0TLlq0hcq",
+                     "masterKey": "TestTaskAppx7WydSk6nQOTWnlNWKfJRcgB3kpvG",
+                     "appName": "ParseServerApp"
+                   }
+                 ],
+                 "users": [
+                   {
+                     "user": "admin",
+                     "pass": "admin"
+                   }
+                 ]
+               }

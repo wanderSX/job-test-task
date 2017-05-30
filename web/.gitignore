@@ -1,0 +1,14 @@
+
+.idea/
+node_modules/
+web/
+script/
+tmp/*
+public/*
+
+public/js/main.js
+
+config/*
+!config/default.js
+
+.editorconfig

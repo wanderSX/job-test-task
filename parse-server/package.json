@@ -1,0 +1,18 @@
+{
+  "name": "parse-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --watch /parse/cloud index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.moonion.com:test-task/parse-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb-migrate": "^2.0.1"
+  }
+}
