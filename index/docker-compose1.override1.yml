@@ -30,6 +30,7 @@ services:
       - MASTER_KEY=TestTaskAppx7WydSk6nQOTWnlNWKfJRcgB3kpvG
       - DATABASE_URI=mongodb://mongo/parsedev
       - SERVER_URL=http://localhost/parse
+      - ALLOW_CLIENT_CLASS_CREATION: 1
 
   parse-dashboard:
     image: yongjhih/parse-dashboard:1.0.22

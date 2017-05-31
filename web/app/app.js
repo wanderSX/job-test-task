@@ -4,14 +4,12 @@ import ReactDOM from 'react-dom';
 import 'react-hot-loader/patch';
 
 // AppContainer is a necessary wrapper component for HMR
-import { AppContainer } from 'react-hot-loader';
+//import { AppContainer } from 'react-hot-loader';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
-
-
 
 import {Router,Route, browserHistory} from 'react-router';
 
