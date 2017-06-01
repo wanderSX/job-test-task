@@ -17,6 +17,7 @@ export default class App extends Component {
         super(props);
 
         this.handleAddUser = this.handleAddUser.bind(this);
+        this.handleRemoveUser = this.handleRemoveUser.bind(this);
         this.fetchUsers = this.fetchUsers.bind(this);
         this.state = {
             users: [],
@@ -26,11 +27,15 @@ export default class App extends Component {
     }
  
     fetchUsers() {
+      console.log('fetchUsers');
       let User = Parse.Object.extend("Employee");
       let query = new Parse.Query(User);
       query.find()
-        .then((users) => this.setState({ users }))
-        .catch((e) => console.log(e.message));
+        .then((users) => {
+          this.setState({ users });
+          console.log(this.state.users);
+        })
+        .catch((e) => console.log("Error:", e.message));
     }
 
     handleAddUser(newUser) {
@@ -43,9 +48,17 @@ export default class App extends Component {
       user.set("city", city);
       user.save()
         .then((obj) => {
-          console.log(obj);
+          this.fetchUsers();
         })
+    }
 
+    handleRemoveUser(userId) {
+      let User = Parse.Object.extend("Employee");
+      let query = new Parse.Query(User);
+      query.get(userId)
+        .then((user) => user.destroy())
+        .then(() => this.fetchUsers())
+        .catch((e) => console.log("Error:", e.message))
     }
 
     componentWillMount() {
@@ -71,18 +84,21 @@ export default class App extends Component {
 
         })
         .then((cities) => {
-          console.log(cities);
+          //console.log(cities);
           this.setState({cities});
         })
         .catch((e) => {
-          console.log(e.message);
+          console.log("Error:", e.message);
         })
     }
 
     render() {
         let props = {
           cities: this.state.cities,
-          handleAddUser: this.handleAddUser
+          users: this.state.users,
+          handleAddUser: this.handleAddUser,
+          handleRemoveUser: this.handleRemoveUser,
+          fetchUsers: this.fetchUsers
         }
 
         return (
@@ -90,7 +106,7 @@ export default class App extends Component {
                 <div id="app-wrapper">
                     <div id="app-content">
                         <Navigation />
-                        {this.props.children && React.cloneElement(this.props.children, props )}
+                        {this.props.children && React.cloneElement(this.props.children, props)}
                     </div>
                 </div>
             </MuiThemeProvider>
