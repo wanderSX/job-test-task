@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
+import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 
 const cities = ['City1','City2','City3','City4',];
 
-export default class AddUserForm extends Component {
+export default class UserInput extends Component {
 
 	constructor(props) {
 		super(props);
@@ -22,6 +23,12 @@ export default class AddUserForm extends Component {
 		};
 	}
 
+	componentWillMount() {
+		if (this.props.initialData) {
+			this.setState(this.props.initialData);
+		}
+	}
+
 	handleChange(e) {
 		const { name, value } = e.target;
 		this.setState({ [name]: value });
@@ -34,12 +41,13 @@ export default class AddUserForm extends Component {
 	handleSubmit(e){
 		e.preventDefault();
 		const { email, name, cityId } = this.state;
+		const {userId} = this.props;
 		const user = {
 			name: name.trim(),
 			email: email.trim(),
 			cityId
 		}
-		this.props.handleAddUser(this.state);
+		this.props.handleSaveUser(user, userId);
 	}
 
 	renderMenuItems() {
@@ -49,18 +57,32 @@ export default class AddUserForm extends Component {
 	render() {
 		const {email, name, cityId} = this.state;
 		const style = {
-		  margin: 12,
+			button: {
+				margin: 12
+			},
+			paper: {
+				display: 'inline-block',
+				padding: 25 + 'px'
+			},
+			form: {
+  			display: 'flex',
+ 				flexDirection: 'row'
+			}
 		};
 		return(
-			<form onSubmit={this.handleSubmit}>
-				<TextField value={name} name='name' hintText='Name' onChange={this.handleChange} /><br />
-				<TextField value={email} name='email' hintText='Email' onChange={this.handleChange} /><br />
-				<SelectField value={cityId} name='city' maxHeight={200} hintText='City' onChange={this.handleSelectChange} >
-					{this.renderMenuItems()}
-				</SelectField><br />
-				<RaisedButton type="submit" label="Save" primary={true} style={style} />
-				<RaisedButton label="Cancel" style={style} onClick={this.props.handleCancel}/>
-			</form>
+			<Paper style={style.paper}>
+				<form onSubmit={this.handleSubmit} >
+					<div style={style.form}>
+					<TextField value={name} name='name' hintText='Name' onChange={this.handleChange} /><br />
+					<TextField value={email} name='email' hintText='Email' onChange={this.handleChange} /><br />
+					<SelectField value={cityId} name='city' maxHeight={200} hintText='City' onChange={this.handleSelectChange} >
+						{this.renderMenuItems()}
+					</SelectField><br />
+					</div>
+					<RaisedButton type="submit" label="Save" primary={true} style={style} />
+					<RaisedButton label="Cancel" style={style} onClick={this.props.handleCancel}/>
+				</form>
+			</Paper>
 		);
 	}
 }

@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import UserInput from '../UserInput';
 import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
+import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
+import {cyan500, red500, greenA200} from 'material-ui/styles/colors';
+import {List, ListItem} from 'material-ui/List';
+import {Card, CardActions, CardText} from 'material-ui/Card';
 
 export default class UserList extends Component {
 
@@ -10,7 +16,7 @@ export default class UserList extends Component {
 
 	// this.saveChanges = this.saveChanges.bind(this);
 	// this.handleSubmit = this.handleSubmit.bind(this);
-	// this.handleEditClick = this.handleEditClick.bind(this);
+	this.handleEditClick = this.handleEditClick.bind(this);
 	this.handleRemoveClick = this.handleRemoveClick.bind(this);
 	this.renderUsers = this.renderUsers.bind(this);
 	this.state = { isEditing: false };
@@ -20,27 +26,49 @@ export default class UserList extends Component {
 		this.props.handleRemoveUser(userId);
 	}
 
-	renderUsers() {
+	handleEditClick(userId) {
+		this.props.handleEditClick(userId);
+	}
 
+	renderUsers() {
+		let { selectedUserForEdit, handleSaveUser, handleCancel } = this.props;
 		return this.props.users.map((user) => {
+			const {name, email, city} = user.attributes;
+			if ( selectedUserForEdit && selectedUserForEdit === user.id ) {
+				return (
+					<UserInput 
+						key={user.id}
+						userId={user.id} 
+						initialData={{name, email, cityId: city.id}}
+						cities={this.props.cities}
+						handleSaveUser={handleSaveUser}
+						handleCancel={handleCancel} 
+					/>
+				)	
+			}
 			return (
-					<Card key={user.id}>
-						<CardHeader
-				      title={`Name: ${user.attributes.name}`}
-				      actAsExpander={true}
-				      showExpandableButton={true}
-				    />
-						<CardText>
-	          	<br />
-	          	Email: {user.attributes.email}
-	          	<br />
-	          	City: {user.attributes.city.get('cityName')}
+				<ListItem key={user.id}>
+					<Card>
+						<CardText actAsExpander>
+						<p>{name}</p>
+						<p>{email}</p>
+						<p>{city.get('cityName')}</p>
 						</CardText>
-						<CardActions expandable={true}>
-				      <RaisedButton label="Edit" primary={true}  />
-				      <RaisedButton label="Remove" secondary={true} onClick={() => this.handleRemoveClick(user.id)} />
-				    </CardActions>
+						<CardActions expandable>
+          		<RaisedButton 
+          			label="Edit" 
+          			primary={true} 
+          			disabled={selectedUserForEdit ? true : false}
+          			onClick={() => this.handleEditClick(user.id)} 
+          		/>
+          		<RaisedButton 
+          			label="Delete" 
+          			disabled={selectedUserForEdit ? true : false}
+          			onClick={() => this.handleRemoveClick(user.id)} 
+          		/>
+        		</CardActions>
 					</Card>
+				</ListItem>
 			)
 		});
 	}
@@ -48,9 +76,25 @@ export default class UserList extends Component {
 	render() {
 
 		return(
-			<div>
-				{this.props.users ? this.renderUsers() : <CircularProgress />}
-			</div>
+				<List>
+					{this.renderUsers()}
+				</List>
 		);
 	}
 }
+
+{/*<Paper key={user.id}>
+						<h6>Name: {user.attributes.name}</h6>
+						<h6>Email: {user.attributes.email}</h6>
+						<h6>City: {user.attributes.city.get('cityName')}</h6>
+						<IconButton tooltip="Edit">
+					    <FontIcon className="material-icons" color={blue500}>mode_edit</FontIcon>
+					  </IconButton>
+					  <IconButton tooltip="Delete">
+					    <FontIcon className="material-icons" color={red500}>delete</FontIcon>
+					  </IconButton>*
+				    <RaisedButton label="Edit" primary={true}  />
+				    <RaisedButton label="Remove" secondary={true} onClick={() => this.handleRemoveClick(user.id)} />
+				  </Paper>
+disabled={selectedUserForEdit ? true : false}
+				    */}

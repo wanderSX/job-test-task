@@ -16,51 +16,12 @@ export default class App extends Component {
     constructor(props) {
         super(props);
 
-        this.handleAddUser = this.handleAddUser.bind(this);
-        this.handleRemoveUser = this.handleRemoveUser.bind(this);
-        this.fetchUsers = this.fetchUsers.bind(this);
         this.state = {
-            users: [],
             projects: [],
             cities: []
         };
     }
  
-    fetchUsers() {
-      console.log('fetchUsers');
-      let User = Parse.Object.extend("Employee");
-      let query = new Parse.Query(User);
-      query.find()
-        .then((users) => {
-          this.setState({ users });
-          console.log(this.state.users);
-        })
-        .catch((e) => console.log("Error:", e.message));
-    }
-
-    handleAddUser(newUser) {
-      const {name, email, cityId} = newUser;
-      let city = this.state.cities.find((city) => city.id === cityId );
-      let User = Parse.Object.extend("Employee");
-      let user = new User();
-      user.set("name", name);
-      user.set("email", email);
-      user.set("city", city);
-      user.save()
-        .then((obj) => {
-          this.fetchUsers();
-        })
-    }
-
-    handleRemoveUser(userId) {
-      let User = Parse.Object.extend("Employee");
-      let query = new Parse.Query(User);
-      query.get(userId)
-        .then((user) => user.destroy())
-        .then(() => this.fetchUsers())
-        .catch((e) => console.log("Error:", e.message))
-    }
-
     componentWillMount() {
       console.log("Component will Mount - APp");
       let City = Parse.Object.extend("City");
@@ -95,18 +56,14 @@ export default class App extends Component {
     render() {
         let props = {
           cities: this.state.cities,
-          users: this.state.users,
-          handleAddUser: this.handleAddUser,
-          handleRemoveUser: this.handleRemoveUser,
-          fetchUsers: this.fetchUsers
         }
 
         return (
             <MuiThemeProvider>
                 <div id="app-wrapper">
                     <div id="app-content">
-                        <Navigation />
-                        {this.props.children && React.cloneElement(this.props.children, props)}
+                          <Navigation />
+                          {this.props.children && React.cloneElement(this.props.children, props)}
                     </div>
                 </div>
             </MuiThemeProvider>
