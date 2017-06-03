@@ -13,16 +13,105 @@ function saveCitiesToDB(cities) {
 
 export default class App extends Component {
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            projects: [],
-            cities: []
-        };
-    }
+    this.state = {
+      users: [],
+      projects: [],
+      cities: []
+    };
+
+    this.fetchUsers = this.fetchUsers.bind(this);
+    this.handleAddUser = this.handleAddUser.bind(this);
+    this.handleEditUser = this.handleEditUser.bind(this);
+    this.handleRemoveUser = this.handleRemoveUser.bind(this);
+    this.handleAddProject = this.handleAddProject.bind(this);
+
+  }
+
+  fetchUsers() {
+    console.log('fetchUsers');
+    let User = Parse.Object.extend("Employee");
+    let query = new Parse.Query(User);
+      query.find()
+      .then((users) => {
+        this.setState({ users });
+        console.log(this.state.users);
+      })
+      .catch((e) => console.log("Error:", e.message));
+  }
+
+  handleAddUser(newUser) {
+
+    this.setState({ isAddingNew: false });
+
+    const {name, email, cityId} = newUser;
+    let city = this.state.cities.find((city) => city.id === cityId );
+    let User = Parse.Object.extend("Employee");
+    let user = new User();
+    user.set("name", name);
+    user.set("email", email);
+    user.set("city", city);
+    user.save()
+      .then((obj) => {
+        this.fetchUsers();
+      })
+  }
+
+  handleEditUser(editedUser, id) {
+
+    const {name, email, cityId} = editedUser;
+    let city = this.state.cities.find((city) => city.id === cityId );
+    let User = Parse.Object.extend("Employee");
+    let query = new Parse.Query(User);
+    query.get(id)
+      .then((user) => {
+        user.set("name", name);
+        user.set("email", email);
+        user.set("city", city);
+        return user.save()
+    }).then(() => this.fetchUsers())
+      .catch((e) => console.log("Error:", e.message));
+  }  
+
+  handleRemoveUser(userId) {
+    let User = Parse.Object.extend("Employee");
+    let query = new Parse.Query(User);
+    query.get(userId)
+      .then((user) => user.destroy())
+      .then(() => this.fetchUsers())
+      .catch((e) => console.log("Error:", e.message))
+  }
+
+  handleAddProject(newProject) {
+    console.log("Add Project (App)");
+    const {name, status, description, team} = newProject;
+    let ProjectTeam = Parse.Object.extend("ProjectTeam");
+    let Project = Parse.Object.extend("Project");
+    let project = new Project();
+    project.set("name", name);
+    project.set("status", status);
+    project.set("description", description);
+    project.save()
+      .then((project) => {
+
+        let memberList = team.map((member) => {
+          let projectTeam = new ProjectTeam();
+          projectTeam.set("employee", member.id);
+          projectTeam.set("project", project.id);
+          projectTeam.set("position", member.position);
+          return projectTeam;
+        });
+        return Parse.Object.saveAll(memberList);
+    }).then(() => {
+      console.log("Success!");
+    }).catch((e) => console.log(e.message));
+
+    //this.context.router.push('/projects');
+  }
  
-    componentWillMount() {
+  componentWillMount() {
       console.log("Component will Mount - APp");
       let City = Parse.Object.extend("City");
       let query = new Parse.Query(City);
@@ -45,17 +134,23 @@ export default class App extends Component {
 
         })
         .then((cities) => {
-          //console.log(cities);
           this.setState({cities});
         })
         .catch((e) => {
           console.log("Error:", e.message);
         })
-    }
+    }  
 
     render() {
+
         let props = {
           cities: this.state.cities,
+          users: this.state.users,
+          handleAddUser: this.handleAddUser,
+          handleEditUser: this.handleEditUser,
+          handleRemoveUser: this.handleRemoveUser,
+          fetchUsers: this.fetchUsers,
+          handleAddProject: this.handleAddProject
         }
 
         return (

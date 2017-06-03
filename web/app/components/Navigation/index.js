@@ -17,7 +17,7 @@ export default class Navigation extends Component {
 
     return (
     	<AppBar title="Title" titleStyle={styles.appTitle} showMenuIconButton={false}>
-          <Tabs style={styles.tabs}>
+          <Tabs initialSelectedIndex={-1} style={styles.tabs}>
             <Tab label='Users' containerElement={<Link to='/users' />}/>
             <Tab label='Projects'containerElement={<Link to='/projects' />}/>
           </Tabs>

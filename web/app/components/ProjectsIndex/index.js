@@ -1,17 +1,30 @@
 import React, {Component} from 'react';
+import ProjectInput from '../ProjectInput';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import {Link} from 'react-router';
 
-export default class UsersIndex extends Component {
+export default class ProjectsIndex extends Component {
 
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			
+		}
 	}
 
 
 	render() {
-		//console.log('Projects');
+	
 		//console.log(this.props);
 		return (
-			<h1 >Projects</h1>
+			<div>
+				<h1 >Projects</h1>
+				<FloatingActionButton containerElement={<Link to='/projects/new' />}>
+				  <ContentAdd />
+				</FloatingActionButton>
+			 </div>  
 		);
 	}
 }
