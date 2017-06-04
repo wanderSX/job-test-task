@@ -26,6 +26,8 @@ export default class App extends Component {
     this.handleAddUser = this.handleAddUser.bind(this);
     this.handleEditUser = this.handleEditUser.bind(this);
     this.handleRemoveUser = this.handleRemoveUser.bind(this);
+
+    this.fetchProjects = this.fetchProjects.bind(this);
     this.handleAddProject = this.handleAddProject.bind(this);
 
   }
@@ -84,6 +86,12 @@ export default class App extends Component {
       .catch((e) => console.log("Error:", e.message))
   }
 
+  fetchProjects() {
+    let Project = Parse.Object.extend("Project");
+    let query = Parse.Query(Project);
+
+  }
+
   handleAddProject(newProject) {
     console.log("Add Project (App)");
     const {name, status, description, team} = newProject;
@@ -97,13 +105,22 @@ export default class App extends Component {
       .then((project) => {
 
         let memberList = team.map((member) => {
+          const {id, position} = member;
           let projectTeam = new ProjectTeam();
-          projectTeam.set("employee", member.id);
-          projectTeam.set("project", project.id);
-          projectTeam.set("position", member.position);
-          return projectTeam;
+          let User = Parse.Object.extend("Employee");
+          let query = new Parse.Query(User);
+          return query.get(id)
+            .then((member) => {
+              projectTeam.set("employee", member);
+              projectTeam.set("project", project);
+              projectTeam.set("position", position);
+              return projectTeam;
+          }).catch((e) => console.log(e.message));
         });
-        return Parse.Object.saveAll(memberList);
+
+        Promise.all(memberList)
+          .then((results) => Parse.Object.saveAll(results));
+
     }).then(() => {
       console.log("Success!");
     }).catch((e) => console.log(e.message));
@@ -165,3 +182,18 @@ export default class App extends Component {
         );
     }
 };
+
+// let memberFetchPromises = team.map((member) => {
+//           let User = Parse.Object.extend("Employee");
+//           let query = Parse.Query(User);
+//           return query.get(id);
+//         });
+
+//         Promise.all(memberFetchPromises)
+//           .then((member) => {
+//             let projectTeam = new ProjectTeam();
+//             projectTeam.set("employee", member);
+//             projectTeam.set("project", project);
+//             projectTeam.set("position", position);
+//             return projectTeam;
+//           });  
