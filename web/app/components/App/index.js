@@ -22,7 +22,10 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    //Parse.Cloud.run('prepopulate');
+    this.fetchCities();
+
+    // To Prepopulate your parse with 'employess'
+    
     // let User = Parse.Object.extend("Employee");
     // let array = [];
     // for( let i = 0; i < 100; i++){
@@ -34,8 +37,8 @@ export default class App extends Component {
     // Parse.Object.saveAll(array)
     //   .then(() => this.fetchCities())
     //   .catch((e) => console.log("Error:", e.message)) 
-    this.fetchCities();
-   // this.fetchUsers(); 
+    
+  
   }
 
   fetchCities() {
