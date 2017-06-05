@@ -107,7 +107,7 @@ export default class ProjectInput extends Component {
 	renderTeam() {
 		let style = {
 			display: "flex",
-			['align-items']: "center"
+			alignItems: "center"
 		}
 		return this.state.team.map((member, index) => {
 			

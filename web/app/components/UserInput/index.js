@@ -52,6 +52,7 @@ export default class UserInput extends Component {
 	}
 
 	renderMenuItems() {
+		console.log(this.props.cities);
 		return this.props.cities.map((city, index) => <MenuItem value={city.id} key={city.id} primaryText={city.attributes.cityName}/>)
 	}
 
