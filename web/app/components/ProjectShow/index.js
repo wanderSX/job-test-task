@@ -31,9 +31,9 @@ export default class ProjectShow extends Component {
 		if (!this.props.selectedProject) {
 			return <CircularProgress />
 		}
-		const {id} = this.props.selectedProject;
+		const {id, team} = this.props.selectedProject;
 		const {name, status, description} = this.props.selectedProject.attributes;
-
+		console.log(team);
 		return(
 			<div style={{marginTop:"40px"}}>
 				<RaisedButton primary={true} label="Delete Project" onClick={() => this.props.handleRemoveProject(id)} />
@@ -48,7 +48,7 @@ export default class ProjectShow extends Component {
 				<Paper>
 					<h3>Team</h3>
 					<List>
-					 {this.renderTeam()}
+					 {team.length > 0 && this.renderTeam()}
 					</List>
 				</Paper>
 			</div>

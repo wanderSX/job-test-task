@@ -116,11 +116,24 @@ export default class App extends Component {
   }  
 
   handleRemoveUser(userId) {
+    let ProjectTeam = Parse.Object.extend("ProjectTeam");
     let User = Parse.Object.extend("Employee");
     let query = new Parse.Query(User);
 
     query.get(userId)
       .then((user) => user.destroy())
+      .then((user) => {
+        let query = new Parse.Query(ProjectTeam);
+
+        query.equalTo('employee', user)
+        return query.find()
+          .then((projectsTeams) => {
+            if(projectsTeams.length !== 0) {
+              return Parse.Object.destroyAll(projectsTeams);
+            }
+            return Promise.resolve;
+          })  
+      })
       .then(() => this.fetchUsers())
       .catch((e) => console.log("Error:", e.message))
   }
@@ -275,7 +288,7 @@ export default class App extends Component {
         }).catch((e) => console.log(e.message));
 
     }).then((projectWithTeam) => this.setState({selectedProject: projectWithTeam }))
-      .catch((e) => console.log(e.message));
+      .catch((e) => console.log(e));
 
   }
  
