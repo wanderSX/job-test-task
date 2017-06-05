@@ -74,9 +74,29 @@ export default class UserInput extends Component {
 			<Paper style={style.paper}>
 				<form onSubmit={this.handleSubmit} >
 					<div style={style.form}>
-					<TextField value={name} name='name' hintText='Name' onChange={this.handleChange} /><br />
-					<TextField value={email} name='email' hintText='Email' onChange={this.handleChange} /><br />
-					<SelectField value={cityId} name='city' maxHeight={200} hintText='City' onChange={this.handleSelectChange} >
+					<TextField 
+						style={style.button} 
+						value={name} 
+						name='name'
+						floatingLabelText="Name" 
+						hintText='Enter your name' 
+						onChange={this.handleChange} /><br />
+					<TextField 
+						style={style.button} 
+						value={email} 
+						name='email' 
+						floatingLabelText="Email" 
+						hintText='Enter your email' 
+						onChange={this.handleChange} /><br />
+					<SelectField 
+						style={style.button} 
+						value={cityId} 
+						name='city' 
+						maxHeight={200} 
+						floatingLabelText="City" 
+						hintText='Select a city' 
+						onChange={this.handleSelectChange} 
+					>
 						{this.renderMenuItems()}
 					</SelectField><br />
 					</div>

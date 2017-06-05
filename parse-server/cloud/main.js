@@ -8,3 +8,11 @@ mongoMigrate.setConfigFilename("migrate-config.js");
 // mongoMigrate.run('up', null,()=>{
 //     require('./modules/User');
 // });
+
+Parse.Cloud.define('prepopulate', (req, res) => {
+	let City = Parse.Object.extends("City");
+	let city = new City();
+
+	city.save(null, {useMasterKey:true})
+		.then((city) => city.destroy())
+})

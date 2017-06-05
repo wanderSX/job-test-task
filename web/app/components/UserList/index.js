@@ -52,7 +52,7 @@ export default class UserList extends Component {
 						<CardText actAsExpander>
 						<p>{name}</p>
 						<p>{email}</p>
-						<p>{city.get('cityName')}</p>
+						<p>{city ? city.attributes.cityName : "City not chosen" }</p>
 						</CardText>
 						<CardActions expandable>
           		<RaisedButton 
@@ -82,19 +82,3 @@ export default class UserList extends Component {
 		);
 	}
 }
-
-{/*<Paper key={user.id}>
-						<h6>Name: {user.attributes.name}</h6>
-						<h6>Email: {user.attributes.email}</h6>
-						<h6>City: {user.attributes.city.get('cityName')}</h6>
-						<IconButton tooltip="Edit">
-					    <FontIcon className="material-icons" color={blue500}>mode_edit</FontIcon>
-					  </IconButton>
-					  <IconButton tooltip="Delete">
-					    <FontIcon className="material-icons" color={red500}>delete</FontIcon>
-					  </IconButton>*
-				    <RaisedButton label="Edit" primary={true}  />
-				    <RaisedButton label="Remove" secondary={true} onClick={() => this.handleRemoveClick(user.id)} />
-				  </Paper>
-disabled={selectedUserForEdit ? true : false}
-				    */}

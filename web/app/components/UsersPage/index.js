@@ -5,6 +5,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Divider from 'material-ui/Divider';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Parse from '../../utils/parseServerInit';
+import ReactPaginate from 'react-paginate';
 
 
 export default class UsersPage extends Component {
@@ -14,17 +15,27 @@ export default class UsersPage extends Component {
 
 		this.state = { 
 			isAddingNew: false,
-			selectedUserForEdit: null };
+			selectedUserForEdit: null,
+      users: [],
+      offset: 0
+		};
 
 		this.handleEditUser = this.handleEditUser.bind(this);
 		this.handleSaveUser = this.handleSaveUser.bind(this);
 		this.handleAddClick = this.handleAddClick.bind(this);
 		this.handleEditClick = this.handleEditClick.bind(this);
 		this.handleCancel = this.handleCancel.bind(this);
+		this.fetchLimitedUsers = this.fetchLimitedUsers.bind(this);
+		this.handlePageClick = this.handlePageClick.bind(this);
 	}
 
 	componentWillMount() {
-		this.props.fetchUsers();
+		//this.props.fetchUsers();
+		this.fetchLimitedUsers();
+	}
+
+	componentWillUpdate() {
+		console.log("componentWillUpdate");
 	}
 	handleEditUser(user, userId) {
 		this.setState({ selectedUserForEdit: null });
@@ -47,23 +58,66 @@ export default class UsersPage extends Component {
 	handleEditClick(userId) {
 		this.setState( {selectedUserForEdit: userId} );
 	}
+
+	handlePageClick(data) {
+		console.log(data);
+		let selected = data.selected;
+    let offset = Math.ceil(selected * 10);
+
+    this.setState({offset: offset}, () => {
+      this.fetchLimitedUsers();
+    });
+	}
+
+	fetchLimitedUsers() {
+		let User = Parse.Object.extend('Employee');
+		let query = new Parse.Query(User);
+
+		query.count()
+			.then((amount) => {
+				this.setState({pageCount: Math.ceil(amount / 10)});
+				query.limit(10);
+				query.skip(this.state.offset);
+				return query.find();
+		}).then((users) => {
+	        this.setState({ users });
+	        console.log(this.state.users);
+	  }).catch((e) => console.log("Error:", e.message));
+		
+		
+	}
 	
 	render() {
-		const { isAddingNew, selectedUserForEdit } = this.state;
-		const { cities, users, handleRemoveUser } = this.props;
+		//const { isAddingNew, selectedUserForEdit } = this.state;
+		//const { cities, users, handleRemoveUser } = this.props;
+		const { isAddingNew, users, selectedUserForEdit } = this.state;
+		const { cities, handleRemoveUser } = this.props;
 		return (
 			<div>
 				<h1>Users</h1>
 				{ users.length > 0 && 
-					<UserList 
-					cities={cities} 
-					users={users} 
-					handleRemoveUser={handleRemoveUser}
-					handleSaveUser={this.handleEditUser}
-					handleEditClick={this.handleEditClick}
-					handleCancel={this.handleCancel}
-					selectedUserForEdit={selectedUserForEdit} 
-					/> 
+					<div> 
+						<UserList 
+							cities={cities} 
+							users={users} 
+							handleRemoveUser={handleRemoveUser}
+							handleSaveUser={this.handleEditUser}
+							handleEditClick={this.handleEditClick}
+							handleCancel={this.handleCancel}
+							selectedUserForEdit={selectedUserForEdit} 
+						/> 
+						<ReactPaginate 
+							previousLabel="previous"
+	            nextLabel="next"
+	            breakLabel={'...'}
+	            pageCount={this.state.pageCount}
+	            marginPagesDisplayed={2}
+	            pageRangeDisplayed={5}
+	            onPageChange={this.handlePageClick}
+	            containerClassName={'pagination-container'}
+	            activeClassName={'active'}
+						/>
+					</div>
 				}
 
 				<Divider />

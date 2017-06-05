@@ -105,20 +105,26 @@ export default class ProjectInput extends Component {
  
 
 	renderTeam() {
+		let style = {
+			display: "flex",
+			['align-items']: "center"
+		}
 		return this.state.team.map((member, index) => {
-		
+			
 			return (
-				<div key={index}>
+				<div style={style} key={index}>
 				<SelectField 
-					value={member.id} 
-					hintText='Name' 
+					value={member.id}
+					floatingLabelText="Name"  
+					hintText='Select an employee' 
 					onChange={(e,i,value) => this.handleSelectName(value, index)}
 				>
 					{this.renderNames()}
 				</SelectField>
 				<SelectField 
 					value={member.position} 
-					hintText='Position' 
+					floatingLabelText='Position'
+					hintText='Select a position'  
 					onChange={(e,i,value) => this.handleSelectChange(value, index)} 
 				>
 					<MenuItem value="Manager" primaryText="Manager" />
@@ -139,14 +145,28 @@ export default class ProjectInput extends Component {
 
 		return (
 			<Paper>
-				<form onSubmit={this.handleSubmit} >
-					<TextField value={name} name='name' hintText='Name' onChange={this.handleChange} /><br />
-					<TextField value={description} multiLine name='description' hintText='Description' onChange={this.handleChange} /><br />
+				<form onSubmit={this.handleSubmit} style={{padding: "20px", paddingBottom: 0}} >
+					<TextField 
+						value={name} 
+						name='name'
+						floatingLabelText='Project Name' 
+						hintText='Enter a project name' 
+						onChange={this.handleChange} 
+					/><br />
+					<TextField 
+						value={description} 
+						multiLine 
+						name='description'
+						floatingLabelText='Description' 
+						hintText='Enter a description' 
+						onChange={this.handleChange} 
+					/><br />
 					<SelectField
 						value={status} 
 						name='status' 
 						maxHeight={200} 
-						hintText='Status' 
+						hintText='Select a project status'
+						floatingLabelText='Status'  
 						onChange={(e,i,value) => this.setState({status: value})} 
 					>
 						<MenuItem value="Started" primaryText="Started" />
@@ -156,14 +176,13 @@ export default class ProjectInput extends Component {
 		        <MenuItem value="Finished" primaryText="Finished" />
 					</SelectField>
 					<Divider />
-					<Subheader>Team</Subheader>
+					<h3>Team</h3>
 					{this.state.team.length > 0 && this.renderTeam()}
-					<RaisedButton label="Add" onClick={this.handleAddMember}/> 
-					<Divider />
-					<RaisedButton label="Save Project" type="submit" primary={true} /> 
+					<RaisedButton label="Add member" onClick={this.handleAddMember}/> 
+
+					<RaisedButton style={{marginTop: '30px', display: 'block'}} label="Save Project" type="submit" primary={true} /> 
 				</form>
 			</Paper>
 		);
 	}
-
 }

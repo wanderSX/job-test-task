@@ -33,7 +33,6 @@ export default class ProjectShow extends Component {
 		}
 		const {id, team} = this.props.selectedProject;
 		const {name, status, description} = this.props.selectedProject.attributes;
-		console.log(team);
 		return(
 			<div style={{marginTop:"40px"}}>
 				<RaisedButton primary={true} label="Delete Project" onClick={() => this.props.handleRemoveProject(id)} />
@@ -45,7 +44,7 @@ export default class ProjectShow extends Component {
 					<h5>{'Status:' + status}</h5>
 					<p>{description}</p>
 				</Paper>
-				<Paper>
+				<Paper style={{padding: '20px'}}>
 					<h3>Team</h3>
 					<List>
 					 {team.length > 0 && this.renderTeam()}

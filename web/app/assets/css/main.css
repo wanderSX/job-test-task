@@ -1,0 +1,51 @@
+*{
+	box-sizing: border-box;
+}
+
+.pagination-container{
+	display: inline-block;
+	padding: 0px;
+	list-style-type: none;
+	font-family: "Roboto", sans-serif;
+	color: #00BCD4 
+}
+
+.pagination-container li{
+	display: inline-block;
+	border-radius: 2px;
+}
+
+.pagination-container a{
+	display: inline-block;
+	height: 36px;
+	line-height: 36px;
+	font-weight: 600;
+	padding-right: 16px;
+	padding-left: 16px;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.pagination-container a:hover{
+	background-color: #E0F7FA;
+  transition: background-color 200ms linear;
+}
+
+
+.pagination-container a span {
+	position: relative;
+	top: -1px;
+	font-size: 2rem;
+}	
+
+.pagination-container .break {
+  cursor: default;
+  padding-right: 16px;
+	padding-left: 16px;
+	font-weight: 600;
+}
+
+.active {
+	background-color: #00BCD4;
+	color: white;
+}

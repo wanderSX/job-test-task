@@ -11,7 +11,7 @@ export default class ProjectsIndex extends Component {
 		return (
 			<div>
 				<h1>Projects</h1>
-				<ProjectList projects={this.props.projects}/>
+				{this.props.projects.length > 0 && <ProjectList projects={this.props.projects}/>}
 				<FloatingActionButton containerElement={<Link to='/projects/new' />}>
 				  <ContentAdd />
 				</FloatingActionButton>
