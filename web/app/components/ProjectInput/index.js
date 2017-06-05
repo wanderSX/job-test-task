@@ -25,11 +25,35 @@ export default class ProjectInput extends Component {
 		this.handleSelectChange = this.handleSelectChange.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+
+		this.setInitialState = this.setInitialState.bind(this);
+	}
+
+	setInitialState() {
+		const {name, status, description} = this.props.selectedProject.attributes;
+		const team = this.props.selectedProject.team.map((member) => {
+			return {
+				id: member.get('employee').id,
+				position: member.get('position')
+			}
+		});
+
+		this.setState({name, status, description, team});
 	}
 
 	componentWillMount() {
-		//console.log('Projects11');
-		//console.log(this.props);
+		const {selectedProject, params, routes} = this.props;
+		if (selectedProject && selectedProject.id === params.id) {
+			this.setInitialState();
+		} else if (routes[2].path === ':id/edit') {
+			this.props.fetchProject(params.id);
+		}
+	}
+
+	componentWillReceiveProps() {
+		if (this.props.selectedProject && this.props.selectedProject.id === this.props.params.id) {
+			this.setInitialState();
+		}
 	}
 
 	handleAddMember() {
@@ -44,7 +68,6 @@ export default class ProjectInput extends Component {
 	}
 
 	handleChange(e) {
-		//console.log('handleChange');
 		const { name, value } = e.target;
 		this.setState({ [name]: value });
 	};
@@ -65,25 +88,25 @@ export default class ProjectInput extends Component {
 	handleSubmit(e) {
 		e.preventDefault();
 
-		console.log("Add Project (input)");
-		this.props.handleAddProject(this.state);
-		//
+		if(this.props.routes[2].path === ':id/edit') {
+			this.props.handleEditProject(this.props.params.id, this.state);
+		} else {	
+			this.props.handleAddProject(this.state);
+		}
+		
 	}
 
 	renderNames() {
 		//
 		return this.props.users.map((user) => {
-			//console.log(user.attributes.name);
 			return <MenuItem key={user.id} value={user.id} primaryText={user.attributes.name} />
 		})
 	}
  
 
 	renderTeam() {
-		//console.log(this.state.team);
 		return this.state.team.map((member, index) => {
-			
-			// console.log(index);
+		
 			return (
 				<div key={index}>
 				<SelectField 

@@ -40,7 +40,7 @@ export default class UserInput extends Component {
 
 	handleSubmit(e){
 		e.preventDefault();
-		console.log(e);
+
 		const { email, name, cityId } = this.state;
 		const {userId} = this.props;
 		const user = {

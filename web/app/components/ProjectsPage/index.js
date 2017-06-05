@@ -2,6 +2,11 @@ import React, {Component} from 'react';
 
 export default class ProjectsPage extends Component {
 
+	componentWillMount() {
+		this.props.fetchProjects();
+	}
+
+
  render() {
  	return (
  		<div>
