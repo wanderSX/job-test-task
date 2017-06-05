@@ -138,7 +138,7 @@ export default class UsersPage extends Component {
 		const { cities } = this.props;
 		return (
 			<div>
-				<h1>Users</h1>
+				<h1>USERS</h1>
 				{ users.length > 0 && 
 					<div> 
 						<UserList 

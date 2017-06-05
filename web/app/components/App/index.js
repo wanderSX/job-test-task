@@ -63,13 +63,10 @@ export default class App extends Component {
     }).catch((e) => console.log("Error:", e.message))          
   }
 
-
     render() {
-
         let props = {
           cities: this.state.cities,
         }
-
         return (
             <MuiThemeProvider>
                 <div id="app-wrapper">

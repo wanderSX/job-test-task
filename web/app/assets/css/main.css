@@ -2,6 +2,10 @@
 	box-sizing: border-box;
 }
 
+body {
+	font-family: "Roboto", sans-serif;
+}
+
 .pagination-container{
 	display: inline-block;
 	padding: 0px;

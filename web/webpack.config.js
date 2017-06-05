@@ -31,7 +31,7 @@ module.exports = {
                 test: /\.css$/,
                 exclude: /node_modules/,
                 loader: ExtractTextPlugin.extract({
-                    loader:  'css-loader'
+                    loader:  'css-loader?importLoaders=1!postcss-loader'
                 })
             },
 

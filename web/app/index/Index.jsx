@@ -8,7 +8,7 @@ export default class NotFound extends Component {
     render() {
         return (
             <h1 style={styles.indexPage} >
-                Hello World
+                Moonion Test Task
             </h1>
         );
     }
