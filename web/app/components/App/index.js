@@ -41,18 +41,18 @@ export default class App extends Component {
 
   componentWillMount() {
     //Parse.Cloud.run('prepopulate');
-    let User = Parse.Object.extend("Employee");
-    let array = [];
-    for( let i = 0; i < 100; i++){
-      let user = new User;
-      user.set('name', 'name' + i);
-      user.set('email', 'email' + i);
-      array.push(user);
-    }
-    Parse.Object.saveAll(array)
-      .then(() => this.fetchCities())
-      .catch((e) => console.log("Error:", e.message)) 
-    //this.fetchCities();
+    // let User = Parse.Object.extend("Employee");
+    // let array = [];
+    // for( let i = 0; i < 100; i++){
+    //   let user = new User;
+    //   user.set('name', 'name' + i);
+    //   user.set('email', 'email' + i);
+    //   array.push(user);
+    // }
+    // Parse.Object.saveAll(array)
+    //   .then(() => this.fetchCities())
+    //   .catch((e) => console.log("Error:", e.message)) 
+    this.fetchCities();
    // this.fetchUsers(); 
   }
 
