@@ -6,6 +6,9 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
+import Formsy from 'formsy-react';
+import {FormsySelect, FormsyText} from 'formsy-material-ui';
+import {Link} from 'react-router';
 
 
 export default class ProjectInput extends Component {
@@ -25,6 +28,8 @@ export default class ProjectInput extends Component {
 		this.handleSelectChange = this.handleSelectChange.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.enableButton = this.enableButton.bind(this);
+		this.disableButton = this.disableButton.bind(this);
 
 		this.setInitialState = this.setInitialState.bind(this);
 	}
@@ -86,15 +91,21 @@ export default class ProjectInput extends Component {
 	}
 
 	handleSubmit(e) {
-		e.preventDefault();
 
 		if(this.props.routes[2].path === ':id/edit') {
 			this.props.handleEditProject(this.props.params.id, this.state);
 		} else {	
 			this.props.handleAddProject(this.state);
 		}
-		
 	}
+
+	enableButton() {
+    this.setState({ canSubmit: true });
+  }
+
+  disableButton() {
+  	this.setState({ canSubmit: false })
+  }
 
 	renderNames() {
 		//
@@ -113,28 +124,35 @@ export default class ProjectInput extends Component {
 			
 			return (
 				<div style={style} key={index}>
-				<SelectField 
+				<FormsySelect 
 					value={member.id}
-					floatingLabelText="Name"  
+					floatingLabelText="Name"
+					name="employeeName"
+					required  
 					hintText='Select an employee' 
-					onChange={(e,i,value) => this.handleSelectName(value, index)}
+					validationError="Please select an employee"
+					onChange={(e, value) => this.handleSelectName(value, index)}
 				>
 					{this.renderNames()}
-				</SelectField>
-				<SelectField 
+				</FormsySelect>
+				<FormsySelect 
 					value={member.position} 
+					name="position"
 					floatingLabelText='Position'
-					hintText='Select a position'  
-					onChange={(e,i,value) => this.handleSelectChange(value, index)} 
+					required
+					hintText='Select a position'
+					validationError="Please select a position"  
+					onChange={(e, value) => this.handleSelectChange(value, index)} 
 				>
 					<MenuItem value="Manager" primaryText="Manager" />
 		      <MenuItem value="Developer" primaryText="Developer" />
 		      <MenuItem value="Designer" primaryText="Designer" />
-				</SelectField>
+				</FormsySelect>
 				<RaisedButton 
 					secondary={true} 
 					label="Remove" 
-					onClick={() => this.handleRemoveMember(index)}/> 
+					onClick={() => this.handleRemoveMember(index)}
+				/> 
 				</div>
 			)
 		})
@@ -145,43 +163,67 @@ export default class ProjectInput extends Component {
 
 		return (
 			<Paper>
-				<form onSubmit={this.handleSubmit} style={{padding: "20px", paddingBottom: 0}} >
-					<TextField 
-						value={name} 
-						name='name'
-						floatingLabelText='Project Name' 
-						hintText='Enter a project name' 
-						onChange={this.handleChange} 
-					/><br />
-					<TextField 
-						value={description} 
-						multiLine 
-						name='description'
-						floatingLabelText='Description' 
-						hintText='Enter a description' 
-						onChange={this.handleChange} 
-					/><br />
-					<SelectField
+				<Formsy.Form
+				  onValid={this.enableButton}
+          onInvalid={this.disableButton}
+          onValidSubmit={this.handleSubmit}
+          style={{padding: "20px", paddingBottom: 0}}
+				>
+					<FormsyText
+              name="name"
+              value={name}
+              required
+              hintText="Enter a project name"
+              floatingLabelText='Project Name'
+              onChange={this.handleChange} 
+          /><br />
+					<FormsyText
+              name="description"
+              value={description}
+              multiLine
+              required
+              hintText="Enter a description"
+              floatingLabelText='Description'
+              onChange={this.handleChange} 
+          /><br />
+          <FormsySelect
 						value={status} 
-						name='status' 
+						name='status'
+						required 
 						maxHeight={200} 
+						floatingLabelText="Status" 
 						hintText='Select a project status'
-						floatingLabelText='Status'  
-						onChange={(e,i,value) => this.setState({status: value})} 
+						validationError="Please select a status"  
+						onChange={(e, value, i) => this.setState({status: value})}
 					>
 						<MenuItem value="Started" primaryText="Started" />
 		        <MenuItem value="Alpha" primaryText="Alpha" />
 		        <MenuItem value="Beta" primaryText="Beta" />
 		        <MenuItem value="Release" primaryText="Release" />
 		        <MenuItem value="Finished" primaryText="Finished" />
-					</SelectField>
+					</FormsySelect>
 					<Divider />
 					<h3>Team</h3>
 					{this.state.team.length > 0 && this.renderTeam()}
-					<RaisedButton label="Add member" onClick={this.handleAddMember}/> 
-
-					<RaisedButton style={{marginTop: '30px', display: 'block'}} label="Save Project" type="submit" primary={true} /> 
-				</form>
+					<RaisedButton 
+						label="Add member" 
+						onClick={this.handleAddMember}
+					/> 
+					<br />
+					<RaisedButton 
+						style={{marginTop: '30px'}} 
+						label="Save Project" 
+						type="submit"
+						disabled={!this.state.canSubmit} 
+						primary={true} 
+					/>
+					<Link to='/projects'>
+						<RaisedButton 
+							style={{marginTop: '30px'}} 
+							label="Cancel"  
+						/>
+					</Link>	 	 
+				</Formsy.Form>
 			</Paper>
 		);
 	}

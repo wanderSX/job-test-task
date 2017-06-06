@@ -3,6 +3,7 @@ import Navigation from '../Navigation';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Parse from '../../utils/parseServerInit';
 import cities from '../../utils/cities';
+import sortCities from '../../utils/sortCities';
 
 function saveCitiesToDB(cities) {
 
@@ -60,8 +61,8 @@ export default class App extends Component {
           return query.find();
         }
     }).then((cities) => {
-        let sorted = cities.sort();
-        console.log(sorted);
+        let sorted = cities.sort(sortCities);
+        //console.log(sorted);
         this.setState({cities: sorted});
     }).catch((e) => console.log("Error:", e.message))          
   }

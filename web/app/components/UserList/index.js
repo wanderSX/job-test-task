@@ -52,7 +52,7 @@ export default class UserList extends Component {
 						<CardText actAsExpander>
 						<p>{name}</p>
 						<p>{email}</p>
-						<p>{city ? city.attributes.cityName : "City not chosen" }</p>
+						<p>{city.attributes.cityName}</p>
 						</CardText>
 						<CardActions expandable>
           		<RaisedButton 
